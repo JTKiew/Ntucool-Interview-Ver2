@@ -5,4 +5,5 @@ export * from './queryCourseUser.dto'
 export * from './createUser.dto'
 export * from './edituser.dto'
 export * from './queryUser.dto'
+export * from './signIn.dto'
 

@@ -110,4 +110,9 @@ export class UserService {
             return true
     }
 
+    // check user with name 
+    public findOne(name: string){
+       return this.users.find(user => user.name === name);
+    }
+
 }

@@ -1,6 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards, RequestTimeoutException, Request } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { createUserDto, editUserDto, queryUserDto } from 'src/dto';
+import { JwtAuthGuard } from 'src/guards/jwt/jwt-auth.guard';
+import { Role } from 'src/guards/roles/roles';
+import { Roles } from 'src/guards/roles/roles.decorator';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 import { UserService } from './user.service';
  
 @ApiTags('User')
@@ -13,11 +18,12 @@ export class UserController {
     // submited name and email carry by HTTP Req Body
     // BearerAuthToken should added in Header.Authorization 
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Post('create')
     createUser(@Body() dto: createUserDto){
         return this.userService.createUser(dto);
     };
-
     // get user data by id
     // url: localhost:3000/user/get/:id
     // :id must replace by the id of target user 
@@ -42,6 +48,8 @@ export class UserController {
     // content in name or email can be blank => no changes
     // BearerAuthToken should added in Header.Authorization 
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Put('edit/:id')
     edituser(
         @Param('id', ParseIntPipe) id: number, 
@@ -54,6 +62,8 @@ export class UserController {
     // :id must replace by the id of target user 
     // BearerAuthToken should added in Header.Authorization 
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Delete('delete/:id')
     deleteUser(@Param('id', ParseIntPipe) id: number){
         return this.userService.deleteUser(id);

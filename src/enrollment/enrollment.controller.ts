@@ -1,6 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { addEnrollmentDto, queryEnrollCourseDto, queryEnrollmentDto, queryEnrollUserDto} from 'src/dto';
+import { JwtAuthGuard } from 'src/guards/jwt/jwt-auth.guard';
+import { Role } from 'src/guards/roles/roles';
+import { Roles } from 'src/guards/roles/roles.decorator';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 import { EnrollmentService } from './enrollment.service';
 
 @ApiTags('Enrollment')
@@ -20,6 +24,8 @@ export class EnrollmentController {
     // submited userId, courseId and role carry by HTTP Req Body
     // BearerAuthToken should added in Header.Authorization 
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Post('add')
     addEnrollment(@Body() dto: addEnrollmentDto){
         return this.enrollService.addEnroll(dto);
@@ -30,6 +36,8 @@ export class EnrollmentController {
     // :id must replace by the id of target enrollment
     // BearerAuthToken should added in Header.Authorization 
     @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
     @Delete('delete/:id')
     deleteEnrollment(@Param('id', ParseIntPipe) id: number){
         return this.enrollService.deleteEnroll(id);

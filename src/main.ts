@@ -8,8 +8,8 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('NTUCool Interview - Users/Courses API')
-    .setDescription('by 周俊廷 B07902091 b07902091@csie.ntu.edu.tw')
-    .setVersion('1.0')
+    .setDescription('Implemented Guards and JWT <br> by 周俊廷 B07902091 b07902091@csie.ntu.edu.tw')
+    .setVersion('2.0')
     .addBearerAuth()
     .build()
 
